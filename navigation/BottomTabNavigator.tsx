@@ -2,72 +2,107 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import { Platform } from 'react-native';
 
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import * as Colors from '../constants/Colors';
+import HomeScreen from '../screens/HomeScreen';
+import DiscoverScreen from '../screens/DiscoverScreen';
+import TagScreen from '../screens/TagScreen';
+import ProfilScreen from '../screens/ProfilScreen';
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createBottomTabNavigator();
+const HomeStack = createStackNavigator();
+const DiscoverStack = createStackNavigator();
+const ProfilStack = createStackNavigator();
 
-export default function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+function HomeNavigator() {
+  return (
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ headerTitle: 'Tab One Title' }}
+      />
+    </HomeStack.Navigator>
+  );
+}
 
+function DiscoverNavigator() {
+  return (
+    <DiscoverStack.Navigator screenOptions={{ headerShown: false }}>
+      <DiscoverStack.Screen
+        name="DiscoverScreen"
+        component={DiscoverScreen}
+      />
+      <DiscoverStack.Screen
+        name="TagScreen"
+        component={TagScreen}
+      />
+    </DiscoverStack.Navigator>
+  );
+}
+
+function ProfilNavigator() {
+  return (
+    <ProfilStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfilStack.Screen
+        name="ProfilScreen"
+        component={ProfilScreen}
+        options={{ headerTitle: 'Tab Three Title' }}
+      />
+    </ProfilStack.Navigator>
+  );
+}
+
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof Ionicons>['name'];
+  color: string;
+}) {
+  return <Ionicons size={24} {...props} />;
+}
+
+export default function BottomTabNavigator(): JSX.Element {
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      initialRouteName="Home"
+      tabBarOptions={{
+        activeTintColor: Colors.light,
+        keyboardHidesTabBar: true,
+        inactiveTintColor: Colors.lightGray,
+        safeAreaInsets: {
+          bottom: Platform.OS === 'android' ? 10 : undefined,
+          top: Platform.OS === 'android' ? 10 : undefined,
+        },
+        style: { backgroundColor: Colors.gray, borderTopColor: Colors.lightGray, borderTopWidth: 0.2 },
+      }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="Accueil"
+        component={HomeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-home-outline" color={color} />
+          ),
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="Découvrir"
+        component={DiscoverNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-search-outline" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Profil"
+        component={ProfilNavigator}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-person-outline" color={color} />
+          ),
         }}
       />
     </BottomTab.Navigator>
-  );
-}
-
-// You can explore the built-in icon families and icons on the web at:
-// https://icons.expo.fyi/
-function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
-
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
-
-function TabOneNavigator() {
-  return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
-      />
-    </TabOneStack.Navigator>
-  );
-}
-
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
-
-function TabTwoNavigator() {
-  return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
-      />
-    </TabTwoStack.Navigator>
   );
 }
