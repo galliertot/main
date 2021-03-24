@@ -7,7 +7,7 @@ import * as Colors from '../constants/Colors'
 
 import { ButtonGroup } from 'react-native-elements';
 
-import FeedBigView from '../components/view/FeedBigView';
+import FeedBigView from '../components/cell/FeedBigView';
 import Feed from '../model/objects/parser/Feed';
 
 import { Audio } from 'expo-av';

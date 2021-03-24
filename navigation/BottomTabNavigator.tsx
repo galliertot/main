@@ -5,10 +5,15 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 
 import * as Colors from '../constants/Colors';
+
+
 import HomeScreen from '../screens/HomeScreen';
 import DiscoverScreen from '../screens/DiscoverScreen';
 import TagScreen from '../screens/TagScreen';
 import ProfilScreen from '../screens/ProfilScreen';
+import FollowerScreen from '../screens/Interaction/FollowerScreen';
+
+
 
 const BottomTab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -21,7 +26,6 @@ function HomeNavigator() {
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ headerTitle: 'Tab One Title' }}
       />
     </HomeStack.Navigator>
   );
@@ -44,11 +48,14 @@ function DiscoverNavigator() {
 
 function ProfilNavigator() {
   return (
-    <ProfilStack.Navigator screenOptions={{ headerShown: false }}>
+    <ProfilStack.Navigator screenOptions={{ headerShown: false }} >
       <ProfilStack.Screen
         name="ProfilScreen"
         component={ProfilScreen}
-        options={{ headerTitle: 'Tab Three Title' }}
+      />
+      <ProfilStack.Screen
+        name="FollowerScreen"
+        component={FollowerScreen}
       />
     </ProfilStack.Navigator>
   );

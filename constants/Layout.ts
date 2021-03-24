@@ -7,6 +7,9 @@ export const height = Dimensions.get('window').height;
 export const userViewWidth = width / 3.5 - 32;
 export const userViewHeight = (userViewWidth * 1.5);
 
+export const userFollowViewWidth = width - 32;
+export const userFollowViewHeight = (userFollowViewWidth / 4.5);
+
 export const trendingBoxViewWidth = width / 2 - 32;
 export const trendingBoxViewHeight = (trendingBoxViewWidth * 1.2);
 

@@ -6,7 +6,7 @@ import { feedSmallViewWidth, feedSmallViewHeight } from '../../constants/Layout'
 import { Button } from 'react-native-elements'
 import * as Layout from '../../constants/Layout';
 import * as Colors from '../../constants/Colors'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Feed from '../../model/objects/parser/Feed';
 
@@ -74,7 +74,7 @@ export default class FeedSmallView extends PureComponent<
           <View style={styles.viewBottom}>
             <Button style={styles.likeButton} titleStyle={styles.numberOfLike} type="clear" icon={
               <Icon
-                name="heart-o"
+                name="heart-outline"
                 size={12}
                 color="white"
               />

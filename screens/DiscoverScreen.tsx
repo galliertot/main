@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, StatusBar, FlatList, Text, TouchableOpacity, ActivityIndicator, View, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, StatusBar, FlatList, Text, TouchableOpacity, ActivityIndicator, View, ScrollView, Keyboard } from 'react-native';
 
 import * as Colors from '../constants/Colors'
 
 import CachedImage from '../model/CachedImage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import TrendingBoxView from '../components/view/TrendingBoxView';
-import UserView from '../components/view/UserView';
-import FeedSmallView from '../components/view/FeedSmallView';
+import TrendingBoxView from '../components/cell/TrendingBoxView';
+import UserView from '../components/cell/UserView';
+import FeedSmallView from '../components/cell/FeedSmallView';
+import SearchView from './Discover/SearchView';
 
 import Tag from '../model/objects/parser/Tag';
 
@@ -28,8 +29,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    paddingHorizontal: 16,
-    width: "85%",
+    paddingRight:0,
+    paddingLeft: 16,
+    width: "77.5%",
     paddingTop: 56,
     paddingBottom:16
   },
@@ -112,11 +114,17 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins-light',
   },
   buttonTop: {
-    tintColor:'white'
+    tintColor:'white',
   },
   viewButtonTop: {
     paddingTop: 54,
     paddingBottom:16,
+    width:"22.5%",
+  },
+  cancelButton: {
+    color:'white',
+    fontFamily:'poppins-regular',
+    fontSize:16
   }
 });
 
@@ -130,6 +138,8 @@ export default function HomeScreen({navigation}): JSX.Element {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+
+  const [searchViewOpen, setSearchViewOpen] = useState(false);
 
   useEffect(() => {
     const array = [];
@@ -176,23 +186,43 @@ export default function HomeScreen({navigation}): JSX.Element {
           inputContainerStyle={styles.inputContainerSearchBar}
           placeholderTextColor={Colors.lightGray}
           round
-
+          onFocus={() => setSearchViewOpen(true) }
           showCancel
           searchIcon={styles.iconContainerSearchBar}
           placeholder="Rechercher..."
           value={search}
         />
-        <View style={styles.viewButtonTop}>
-          <Button type="clear" style={styles.buttonTop} icon={
-            <Icon
-              name="plus-square-o"
-              size={24}
-              color={Colors.light}
-            />
-          } />
-        </View>
+
+        { searchViewOpen ? cancelButtonSearch() : iconCreateNewFeed() }
       </View>
     )
+  }
+
+  const iconCreateNewFeed = () => {
+    return (
+      <View style={styles.viewButtonTop}>
+        <Button type="clear" style={styles.buttonTop} icon={
+          <Icon
+            name="plus-square-o"
+            size={24}
+            color={Colors.light}
+          />
+        } />
+      </View>
+    )
+  }
+
+  const cancelButtonSearch = () => {
+    return (
+      <View style={styles.viewButtonTop}>
+        <Button type="clear" style={styles.buttonTop} title="Annuler" titleStyle={styles.cancelButton} onPress={() => cancelButtonAction() }/>
+      </View>
+    )
+  }
+
+  const cancelButtonAction = () => {
+    setSearchViewOpen(false);
+    Keyboard.dismiss();
   }
 
   const headerSwiper = () => {
@@ -334,23 +364,38 @@ export default function HomeScreen({navigation}): JSX.Element {
           contentContainerStyle={{paddingHorizontal:16}}
           ItemSeparatorComponent={
             () => <View style={{ width: spaceBetweenCell, backgroundColor: 'transparent' }}/>
-        }
+          }
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter()}
         />
       </View>
     )
   }
-  return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="transparent" barStyle="light-content" />
-      <ScrollView contentContainerStyle={{paddingBottom:24}} showsVerticalScrollIndicator={false}>
-        { headerSearchBar() }
-        { headerSwiper() }
 
+  const mainContent = () => {
+    return (
+      <View>
+        { headerSwiper() }
         { categoryCompo("Publications populaire", ListTypes.FEED, 3)}
         { categoryCompo("Tags populaire", ListTypes.TAG, 16)}
         { categoryCompo("Personnes populaire", ListTypes.USER, 32)}
+      </View>
+    )
+  }
+
+  const mainSearchContent = () => {
+    return (
+      <SearchView />
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor="transparent" barStyle="light-content" />
+      <ScrollView contentContainerStyle={{paddingBottom:24}} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps='always' keyboardDismissMode="on-drag">
+        { headerSearchBar() }
+
+        { searchViewOpen ? mainSearchContent() : mainContent() }
 
       </ScrollView>
     </View>

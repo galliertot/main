@@ -8,7 +8,7 @@ import * as Style from '../constants/Style'
 
 import CachedImage from '../model/CachedImage';
 
-import FeedSmallView from '../components/view/FeedSmallView';
+import FeedSmallView from '../components/cell/FeedSmallView';
 import Feed from '../model/objects/parser/Feed';
 
 const styles = StyleSheet.create({
